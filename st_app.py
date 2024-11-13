@@ -6,6 +6,7 @@ import streamlit as st
 from config import CONFIG
 from sec_loader import load_sec_data
 from file_deletion import delete_existing_files  # Import the deletion functions
+from sec_processor import get_latest_10q_info
 
 # Get the current working directory
 cwd = os.getcwd()
@@ -93,4 +94,10 @@ if st.session_state.step == 3:
     st.write(df_sec_facts.head())
     st.write("Filings Data")
     st.write(all_data_df_min.head())
+    st.session_state.step = 4
+
+if st.session_state.step == 4:
+    df_clean = get_latest_10q_info()
+    st.write("Clean Data")
+    st.write(df_clean)
 
