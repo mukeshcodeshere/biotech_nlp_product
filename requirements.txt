@@ -1,20 +1,4 @@
-import os
-import asyncio
-import logging
-import warnings
-import json
-from datetime import datetime
-from glob import glob
-from typing import List, Dict, Optional
-
-import pandas as pd
-from selectolax.parser import HTMLParser
-
-# Suppress warnings
-warnings.filterwarnings("ignore")
-
-# Get today's date
-today = datetime.today()
-
-# Format the date in 'YYYY-MM-DD' format
-today_date = today.strftime('%Y-%m-%d')
+pandas==2.0.3
+aiohttp==3.8.5
+datamule==0.1.4  # Replace with the actual version if known, as datamule may not be a well-known package.
+subprocess32==3.5.4  # In case you're using subprocess with compatibility for Python 2.x (not usually needed for Python 3).
