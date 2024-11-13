@@ -14,25 +14,39 @@
 </head>
 <body>
     <div class="container">
-        <h1>Stock Price Chart</h1>
-        <form id="ticker-form">
-            <label for="tickers">Enter Stock Tickers (comma separated):</label>
-            <input type="text" id="tickers" name="tickers" required>
-            <button type="submit">Get Chart</button>
-        </form>
-        <div id="chart-container" style="display: none;">
-            <h2>Stock Price Chart</h2>
-            <img id="stock-chart" src="" alt="Stock Chart">
-        </div>
+        {% if api_key %}
+            <h1>Stock Price Chart</h1>
+            <form id="ticker-form">
+                <label for="tickers">Enter Stock Tickers (comma separated):</label>
+                <input type="text" id="tickers" name="tickers" required>
+                <button type="submit">Get Chart</button>
+            </form>
+            <div id="chart-container" style="display: none;">
+                <h2>Stock Price Chart</h2>
+                <img id="stock-chart" src="" alt="Stock Chart">
+            </div>
+        {% else %}
+            <h1>Please enter your API Key</h1>
+            <form method="POST">
+                <label for="api_key">API Key:</label>
+                <input type="text" id="api_key" name="api_key" required>
+                <button type="submit">Submit</button>
+            </form>
+        {% endif %}
     </div>
+
     <script>
         $(document).ready(function() {
             $('#ticker-form').submit(function(event) {
                 event.preventDefault();
                 const tickers = $('#tickers').val();
                 $.post('/get_chart', { tickers: tickers }, function(data) {
-                    $('#stock-chart').attr('src', 'data:image/png;base64,' + data.chart);
-                    $('#chart-container').show();
+                    if (data.chart) {
+                        $('#stock-chart').attr('src', 'data:image/png;base64,' + data.chart);
+                        $('#chart-container').show();
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
                 });
             });
         });

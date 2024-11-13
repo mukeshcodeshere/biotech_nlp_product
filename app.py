@@ -1,19 +1,34 @@
 import os
 import yfinance as yf
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+import matplotlib
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 from dotenv import load_dotenv
+from flask_session import Session
+
+# Set the backend to Agg (no GUI)
+matplotlib.use('Agg')
 
 # Load environment variables from .env
 load_dotenv()
 
 app = Flask(__name__)
 
-# Fetch the API_KEY securely from the environment
-API_KEY = os.getenv('API_KEY')
+# Configure session (for API key storage)
+app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
 
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    if request.method == 'POST':
+        # Store the API key in the session
+        api_key = request.form['api_key']
+        session['api_key'] = api_key  # Store in session for later use
+        return redirect(url_for('home'))  # Redirect to the home page after storing API key
+    return render_template('index.html', api_key=session.get('api_key'))
 
 def get_stock_data(tickers):
     stock_data = {}
@@ -48,17 +63,15 @@ def generate_chart(stock_data):
     return img_base64
 
 
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-
 @app.route('/get_chart', methods=['POST'])
 def get_chart():
+    if 'api_key' not in session:
+        return jsonify({'error': 'API key not provided'}), 400  # Handle case where no API key is stored
+
     tickers = request.form['tickers'].split(',')
     stock_data = get_stock_data(tickers)
     chart = generate_chart(stock_data)
-    return jsonify({'chart': chart, 'api_key': API_KEY})
+    return jsonify({'chart': chart, 'api_key': session['api_key']})
 
 
 if __name__ == '__main__':
