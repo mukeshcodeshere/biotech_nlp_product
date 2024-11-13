@@ -36,7 +36,6 @@ def get_latest_10q_info():
     # Reset the index so that 'ticker' becomes a column again
     latest_10q_info = latest_10q_info.reset_index(drop=True)
 
-    # Function to compare the latest and previous content of the 10Q filings
     def compare_10q_content(row):
         if row['content_10Q_previous'] is None:
             return "No previous filing to compare"
@@ -44,15 +43,34 @@ def get_latest_10q_info():
         # Using ndiff to compare the content line by line
         diff = list(ndiff(row['content_10Q_previous'].splitlines(), row['content_10Q_latest'].splitlines()))
         
-        # Return the differences or a message if no differences
-        changes = [line for line in diff if line.startswith('+ ') or line.startswith('- ')]
+        # Identify added and removed lines
+        added_lines = [(i, line[2:]) for i, line in enumerate(diff) if line.startswith('+ ')]
+        removed_lines = [(i, line[2:]) for i, line in enumerate(diff) if line.startswith('- ')]
         
-        if not changes:
+        # Create output with context on changes
+        output = []
+        
+        # If there are added lines (added in the latest filing)
+        if added_lines:
+            output.append("Added lines (from previous filing):")
+            for i, line in added_lines:
+                output.append(f"  Line {i + 1}: {line}")
+        
+        # If there are removed lines (removed from the latest filing)
+        if removed_lines:
+            output.append("Removed lines (from previous filing):")
+            for i, line in removed_lines:
+                output.append(f"  Line {i + 1}: {line}")
+        
+        # If no changes found
+        if not added_lines and not removed_lines:
             return "No differences"
-        else:
-            return "\n".join(changes)
+
+        # Return the formatted changes
+        return "\n\n".join(output)
+
 
     # Apply the comparison function to each row
     latest_10q_info['comparison'] = latest_10q_info.apply(compare_10q_content, axis=1)
 
-    return latest_10q_info
+    return latest_10q_info[["ticker_10Q_latest","comparison"]]
