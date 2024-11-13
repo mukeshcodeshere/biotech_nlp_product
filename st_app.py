@@ -75,5 +75,3 @@ st.write("Stock Data")
 st.write(df_sec_facts.head())
 st.write("Filings Data")
 st.write(all_data_df_min.head())
-
-# Need to find the latest prompt
