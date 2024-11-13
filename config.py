@@ -1,6 +1,6 @@
 # config.py
 CONFIG = {
-    'TICKERS': ['VRTX', 'MRNA'],
+    'TICKERS': ['VRTX', 'REGN'],
     'START_DATE': '2024-01-01',
     'END_DATE': '2024-06-01',
     'BASE_DIR': 'sec_data',

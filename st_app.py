@@ -1,20 +1,21 @@
 import os
 import subprocess
-import streamlit as st
-import pandas as pd
-from config import CONFIG
-import subprocess
 import time
+import pandas as pd
+import streamlit as st
+from config import CONFIG
 from sec_loader import load_sec_data
-# NEED TO REMOVE ALL FILES IN FOLDER BEFORE DOWNLOADING
+from file_deletion import delete_existing_files  # Import the deletion functions
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+# Get the current working directory
 cwd = os.getcwd()
 st.write(cwd)
+
 # Streamlit UI layout
 st.title('SEC Data Downloader')
-st.write("""
-    This application allows you to download SEC filings for the selected tickers and process them into structured data.
-    The process will update your config file and run the necessary download and data processing.
-""")
+st.write("""This application allows you to download SEC filings for the selected tickers and process them into structured data.
+    The process will update your config file and run the necessary download and data processing.""")
 
 # Configuration parameters
 tickers_input = st.text_input("Enter tickers (comma separated)", ','.join(CONFIG['TICKERS']))
@@ -53,7 +54,11 @@ if st.button('Update Configuration'):
 file_path = os.path.join(CONFIG['BASE_DIR'], 'sec_data_all_tickers.csv')
 
 # Step 2: Button to run `sec_download.py`
+st.write("Click below after updating configuration")
 if st.button('Download and Process SEC Data'):
+    # Delete existing files in the base directory before downloading
+    delete_existing_files(CONFIG['BASE_DIR'])  # Call to the new module
+
     # Show a loading spinner while the download process is running
     with st.spinner("Downloading SEC filings and processing data..."):
         try:
