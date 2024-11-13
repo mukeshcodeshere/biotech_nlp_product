@@ -17,15 +17,15 @@ def get_latest_10q_info():
     def get_latest_10q_per_ticker(group):
         if len(group) == 1:
             return pd.Series({
-                'ticker_10Q_latest': group.iloc[0]['filing_date'],
+                'ticker_10Q_latest': group.iloc[0]['ticker'],
                 'ticker_10Q_previous': None,
                 'content_10Q_latest': group.iloc[0]['content'],
                 'content_10Q_previous': None
             })
         elif len(group) == 2:
             return pd.Series({
-                'ticker_10Q_latest': group.iloc[0]['filing_date'],
-                'ticker_10Q_previous': group.iloc[1]['filing_date'],
+                'ticker_10Q_latest': group.iloc[0]['ticker'],
+                'ticker_10Q_previous': group.iloc[1]['ticker'],
                 'content_10Q_latest': group.iloc[0]['content'],
                 'content_10Q_previous': group.iloc[1]['content']
             })
@@ -56,8 +56,3 @@ def get_latest_10q_info():
     latest_10q_info['comparison'] = latest_10q_info.apply(compare_10q_content, axis=1)
 
     return latest_10q_info
-
-# Example of how to call the function:
-if __name__ == "__main__":
-    result = get_latest_10q_info()
-    print(result)
