@@ -8,6 +8,7 @@ from glob import glob
 from typing import List, Optional
 from config import CONFIG  # Import the config dictionary
 from selectolax.parser import HTMLParser
+from sqlalchemy import create_engine
 
 # Suppress warnings
 warnings.filterwarnings("ignore")
@@ -195,4 +196,33 @@ def load_sec_data():
     all_data_df_min = all_data_df_min.sort_values(by="filing_date", ascending=False)
 
     # Return both DataFrames
+    return df_sec_facts, all_data_df_min
+
+
+def load_sec_data_db():
+    # Create database engine
+    engine = create_engine(CONFIG['DATABASE_URL'])
+    
+    try:
+        # Load data from CSV files first
+        df_sec_facts = pd.read_csv(os.path.join(CONFIG['BASE_DIR'], 'sec_data_all_tickers.csv'))
+        all_data_df_min = pd.read_csv(os.path.join(CONFIG['BASE_DIR'], 'filings_data.csv'))
+        
+        # Save to PostgreSQL
+        df_sec_facts.to_sql('sec_facts', engine, if_exists='replace', index=False)
+        all_data_df_min.to_sql('filings_data', engine, if_exists='replace', index=False)
+        
+        return df_sec_facts, all_data_df_min
+        
+    except Exception as e:
+        print(f"Error loading data: {e}")
+        return pd.DataFrame(), pd.DataFrame()
+
+def read_from_database():
+    engine = create_engine(CONFIG['DATABASE_URL'])
+    
+    # Read from PostgreSQL
+    df_sec_facts = pd.read_sql_table('sec_facts', engine)
+    all_data_df_min = pd.read_sql_table('filings_data', engine)
+    
     return df_sec_facts, all_data_df_min

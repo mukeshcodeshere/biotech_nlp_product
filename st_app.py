@@ -4,7 +4,7 @@ import time
 import pandas as pd
 import streamlit as st
 from config import CONFIG
-from sec_loader import load_sec_data
+from sec_loader import load_sec_data,read_from_database
 from file_deletion import delete_existing_files  # Import the deletion functions
 from sec_processor import get_latest_10q_info
 
@@ -25,6 +25,7 @@ tickers_input = st.text_input("Enter tickers (comma separated)", ','.join(CONFIG
 start_date_input = st.date_input("Select start date", pd.to_datetime(CONFIG['START_DATE']))
 end_date_input = st.date_input("Select end date", pd.to_datetime(CONFIG['END_DATE']))
 base_dir_input = st.text_input("Base directory for saving data (leave as default)", CONFIG['BASE_DIR'])
+db_input = st.text_input("Enter database connection", CONFIG['DATABASE_URL'])
 
 # Step 1: Update Configuration (Only available in step 1)
 if st.session_state.step == 1:
@@ -34,12 +35,15 @@ if st.session_state.step == 1:
         start_date = start_date_input.strftime('%Y-%m-%d')
         end_date = end_date_input.strftime('%Y-%m-%d')
         base_dir = base_dir_input if base_dir_input else CONFIG['BASE_DIR']  # Default to original value if not provided
+        db_string = db_input if db_input else CONFIG['DATABASE_URL']  # Default to original value if not provided
 
         # Update the configuration dictionary
         CONFIG['TICKERS'] = tickers
         CONFIG['START_DATE'] = start_date
         CONFIG['END_DATE'] = end_date
         CONFIG['BASE_DIR'] = base_dir
+        CONFIG['DATABASE_URL'] = db_string
+        
 
         # Write the updated config back to the config.py file
         config_file_path = 'config.py'
@@ -51,6 +55,7 @@ if st.session_state.step == 1:
             f.write(f"    'END_DATE': '{end_date}',\n")
             f.write(f"    'BASE_DIR': '{base_dir}',\n")
             f.write(f"    'USER_AGENT': 'Your Name your@email.com'\n")
+            f.write(f"    'DATABASE_URL': {db_string}\n")
             f.write(f"}}\n")
         st.success("Configuration updated successfully!")
         # Move to the next step
@@ -90,7 +95,7 @@ if st.session_state.step == 2:
 # Step 3: Load and Display Data (Only available in step 3)
 if st.session_state.step == 3:
     st.write("Loading SEC data...")
-    df_sec_facts, all_data_df_min = load_sec_data()
+    df_sec_facts, all_data_df_min = read_from_database()#load_sec_data()
     st.write("Stock Data")
     st.write(df_sec_facts.head())
     st.write("Filings Data")
