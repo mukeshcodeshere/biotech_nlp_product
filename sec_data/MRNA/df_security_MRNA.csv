@@ -1,0 +1,5 @@
+Taxonomy,Concept,Unit,Value,Start,End,Accession,Fiscal Year,Fiscal Period,Form,Filed Date,Frame,Ticker
+us-gaap,DebtSecuritiesAvailableForSaleUnrealizedLossPositionNumberOfPositions,security,582.0,,2022-12-31,0001682852-24-000015,2023,FY,10-K,2024-02-23,CY2022Q4I,MRNA
+us-gaap,DebtSecuritiesAvailableForSaleUnrealizedLossPositionNumberOfPositions,security,392.0,,2023-12-31,0001682852-24-000015,2023,FY,10-K,2024-02-23,,MRNA
+us-gaap,DebtSecuritiesAvailableForSaleUnrealizedLossPositionNumberOfPositions,security,392.0,,2023-12-31,0001682852-24-000027,2024,Q1,10-Q,2024-05-02,,MRNA
+us-gaap,DebtSecuritiesAvailableForSaleUnrealizedLossPositionNumberOfPositions,security,395.0,,2024-03-31,0001682852-24-000027,2024,Q1,10-Q,2024-05-02,CY2024Q1I,MRNA

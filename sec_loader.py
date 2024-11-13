@@ -1,170 +1,198 @@
 import os
+import logging
+import warnings
 import json
 import pandas as pd
-from typing import List, Dict, Optional
+from datetime import datetime
 from glob import glob
+from typing import List, Optional
+from config import CONFIG  # Import the config dictionary
 from selectolax.parser import HTMLParser
-import logging
 
-# Set up basic logging configuration
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# Suppress warnings
+warnings.filterwarnings("ignore")
 
-def load_all_json_files(directory: str) -> List[Dict]:
-    """
-    Load all JSON files from the given directory and its subdirectories.
-    
-    Parameters:
-        directory (str): The directory where the JSON files are stored.
-    
-    Returns:
-        List[Dict]: A list of JSON data loaded from each file.
-    """
-    json_files = []  # List to store JSON data
-    for file_path in glob(os.path.join(directory, '**', 'CIK*.json'), recursive=True):
+# Get today's date
+today = datetime.today()
+today_date = today.strftime('%Y-%m-%d')
+
+tickers = CONFIG['TICKERS']
+start = CONFIG['START_DATE']
+end = CONFIG['END_DATE']
+base_dir = CONFIG['BASE_DIR']
+
+class SECFilingLoader:
+    def __init__(self, base_dir: str = 'sec_data', concepts_dir: str = 'company_concepts'):
+        self.base_dir = base_dir
+        self.concepts_dir = concepts_dir  # Directory where Company Concepts are stored
+        logging.basicConfig(level=logging.INFO)
+        self.logger = logging.getLogger(__name__)
+
+    def extract_text_from_html(self, file_path: str) -> str:
+        """Extract clean text from HTML filing using selectolax (faster than BeautifulSoup)."""
         try:
-            with open(file_path, 'r') as f:
-                data = json.load(f)
-                json_files.append(data)
-                logger.info(f"Loaded JSON file: {file_path}")
-                # Print a snippet of the loaded JSON file (e.g., first 3 keys or first entry)
-                print_json_snippet(data)
-        except Exception as e:
-            logger.error(f"Failed to load JSON file {file_path}: {e}")
-    
-    return json_files
-
-def print_json_snippet(data: Dict) -> None:
-    """ Print a snippet of the JSON data (first few keys or entries) """
-    if isinstance(data, dict):
-        keys = list(data.keys())[:5]  # Show the first 5 keys
-        print(f"JSON snippet (first 5 keys): {keys}")
-    elif isinstance(data, list):
-        print(f"JSON snippet (first 3 items): {data[:3]}")  # Show first 3 items of a list
-    else:
-        print(f"JSON snippet: {str(data)[:200]}...")  # Show first 200 characters of the data
-
-def load_all_html_files(directory: str) -> List[HTMLParser]:
-    """
-    Load all HTML files from the given directory and its subdirectories.
-    
-    Parameters:
-        directory (str): The directory where the HTML files are stored.
-    
-    Returns:
-        List[HTMLParser]: A list of HTMLParser objects, each parsed from an HTML file.
-    """
-    html_files = []  # List to store parsed HTML files
-    for file_path in glob(os.path.join(directory, '**', '*.htm'), recursive=True):
-        try:
-            with open(file_path, 'r') as f:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 html_content = f.read()
-                html_parser = HTMLParser(html_content)
-                html_files.append(html_parser)
-                logger.info(f"Loaded HTML file: {file_path}")
-                # Print a snippet of the loaded HTML content (first 300 chars)
-                print_html_snippet(html_content)
+            
+            # Parse HTML using selectolax
+            tree = HTMLParser(html_content)
+            
+            # Remove script and style elements
+            for tag in tree.css('script'):
+                tag.decompose()
+            for tag in tree.css('style'):
+                tag.decompose()
+            
+            # Extract text with newlines between elements
+            if tree.body:
+                text = tree.body.text(separator='\n')
+                # Clean up extra whitespace
+                text = ' '.join(text.split())
+                return text
+            return ""
+            
         except Exception as e:
-            logger.error(f"Failed to load HTML file {file_path}: {e}")
-    
-    return html_files
+            self.logger.error(f"Error extracting text from {file_path}: {str(e)}")
+            return ""
 
-def print_html_snippet(html_content: str) -> None:
-    """ Print a snippet of the raw HTML content (first 300 characters) """
-    print(f"HTML snippet: {html_content[:300]}...")  # Show first 300 characters of HTML content
+    def classify_filing_type(self, content: str, filename: str) -> str:
+        """Classify the filing type as 10-Q or 10-K based on the content or filename."""
+        if '10-K' in content or '10-K' in filename:
+            return '10-K'
+        elif '10-Q' in content or '10-Q' in filename:
+            return '10-Q'
+        else:
+            return 'Other'  # You could also use 'Unknown' if you prefer
 
-def load_all_csv_files(directory: str) -> List[pd.DataFrame]:
-    """
-    Load all CSV files from the given directory and its subdirectories.
-    
-    Parameters:
-        directory (str): The directory where the CSV files are stored.
-    
-    Returns:
-        List[pd.DataFrame]: A list of DataFrames, each containing data from a CSV file.
-    """
-    csv_files = []  # List to store DataFrames
-    for file_path in glob(os.path.join(directory, '**', '*.csv'), recursive=True):
+    def load_filings(self, ticker: str) -> pd.DataFrame:
+        """Load SEC filings data with full text content for a specific ticker."""
         try:
-            df = pd.read_csv(file_path)
-            csv_files.append(df)
-            logger.info(f"Loaded CSV file: {file_path}")
-            # Print the head of the DataFrame (first 5 rows)
-            print_csv_snippet(df)
+            filings_path = os.path.join(self.base_dir, ticker, 'filings')
+            filing_files = glob(os.path.join(filings_path, '*.htm'))
+            
+            if not filing_files:
+                raise FileNotFoundError(f"No filings found for {ticker}")
+            
+            filings_data = []
+            for file_path in filing_files:
+                try:
+                    filename = os.path.basename(file_path)
+                    accession_num, filing_date = filename.replace('.htm', '').split('_')
+                    
+                    # Read and clean the file content
+                    clean_text = self.extract_text_from_html(file_path)
+                    
+                    filing_info = {
+                        'ticker': ticker,  # Ensure 'ticker' is added
+                        'accession_number': accession_num,
+                        'filing_date': filing_date,
+                        'file_path': file_path,
+                        'file_size': os.path.getsize(file_path),
+                        'content': clean_text,
+                        'content_length': len(clean_text),
+                    }
+                    filings_data.append(filing_info)
+                    
+                except Exception as e:
+                    self.logger.error(f"Error processing file {file_path}: {str(e)}")
+                    continue
+            
+            # Convert to DataFrame
+            df = pd.DataFrame(filings_data)
+            
+            # Convert dates and format columns
+            df['filing_date'] = pd.to_datetime(df['filing_date'])
+            df['file_size'] = df['file_size'] / 1024  # Convert to KB
+            
+            # Sort by filing date
+            df = df.sort_values('filing_date', ascending=False)
+            
+            return df
+            
         except Exception as e:
-            logger.error(f"Failed to load CSV file {file_path}: {e}")
-    
-    return csv_files
+            self.logger.error(f"Error loading filings for {ticker}: {str(e)}")
+            return pd.DataFrame()
 
-def print_csv_snippet(df: pd.DataFrame) -> None:
-    """ Print a snippet of the CSV data (first 5 rows) """
-    print(f"CSV snippet (first 5 rows):\n{df.head()}")
-
-def load_all_files_in_ticker(ticker_directory: str) -> Dict:
-    """
-    Load all files within a given ticker directory.
-    
-    Parameters:
-        ticker_directory (str): The directory for a specific Ticker, e.g., 'sec_data/AAPL'.
-    
-    Returns:
-        Dict: A dictionary containing loaded data, with keys like 'json', 'html', 'csv'.
-    """
-    data = {}
-
-    # Load JSON files from the company_concepts folder
-    company_concepts_dir = os.path.join(ticker_directory, 'company_concepts')
-    data['json'] = load_all_json_files(company_concepts_dir)
-
-    # Load HTML files from the filings folder
-    filings_dir = os.path.join(ticker_directory, 'filings')
-    data['html'] = load_all_html_files(filings_dir)
-
-    # Load CSV files from the some_csvs_here folder
-    csvs_dir = os.path.join(ticker_directory, 'some_csvs_here')
-    data['csv'] = load_all_csv_files(csvs_dir)
-
-    return data
-
-def load_all_files_in_directory(base_directory: str) -> Dict[str, Dict]:
-    """
-    Load all files from all tickers in the given base directory.
-    
-    Parameters:
-        base_directory (str): The base directory where all ticker directories are stored (e.g., 'sec_data').
-    
-    Returns:
-        Dict[str, Dict]: A dictionary where each key is a ticker symbol, and each value is a dictionary of loaded files.
-    """
-    all_data = {}
-    
-    # Iterate through all directories (tickers) in the base directory
-    for ticker_directory in glob(os.path.join(base_directory, '*')):
-        if os.path.isdir(ticker_directory):
-            ticker_name = os.path.basename(ticker_directory)
-            logger.info(f"Loading files for ticker: {ticker_name}")
-            all_data[ticker_name] = load_all_files_in_ticker(ticker_directory)
-
-    return all_data
-
-def print_dataframe_heads(all_ticker_data: Dict[str, Dict]):
-    """
-    Print the heads of the DataFrames for each ticker in the loaded data.
-    
-    Parameters:
-        all_ticker_data (Dict[str, Dict]): A dictionary containing data for each ticker.
-    """
-    for ticker, data in all_ticker_data.items():
-        logger.info(f"Printing DataFrame heads for ticker: {ticker}")
+    def load_company_concepts(self, ticker: str) -> pd.DataFrame:
+        """Load Company Concepts data for a specific ticker."""
+        try:
+            concepts_path = os.path.join(self.base_dir, ticker, self.concepts_dir)
+            concepts_files = glob(os.path.join(concepts_path, '*.json'))
+            
+            if not concepts_files:
+                raise FileNotFoundError(f"No concepts found for {ticker}")
+            
+            concepts_data = []
+            for file_path in concepts_files:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    concepts_data.append(json.load(f))
+            
+            # Convert to DataFrame
+            concepts_df = pd.DataFrame(concepts_data)
+            concepts_df['ticker'] = ticker  # Ensure 'ticker' is added
+            
+            return concepts_df
         
-        # Print the head of each CSV DataFrame for this ticker
-        for i, df in enumerate(data.get('csv', [])):
-            logger.info(f"Head of CSV DataFrame {i + 1} for ticker {ticker}:")
-            print(df.head())  # Print the first few rows of each DataFrame
+        except Exception as e:
+            self.logger.error(f"Error loading company concepts for {ticker}: {str(e)}")
+            return pd.DataFrame()
 
-# Example usage:
-base_directory = 'sec_data'
-all_ticker_data = load_all_files_in_directory(base_directory)
+    def load_all_filings(self, tickers: Optional[List[str]] = None) -> pd.DataFrame:
+        """Load filings and company concepts data with text for multiple tickers."""
+        all_data = []  # List to hold the DataFrames for all tickers
+        if tickers is None:
+            # Get all tickers from the base directory
+            tickers = [d for d in os.listdir(self.base_dir) if os.path.isdir(os.path.join(self.base_dir, d))]
+        
+        for ticker in tickers:
+            self.logger.info(f"Loading filings and company concepts for {ticker}...")
+            
+            # Load SEC filings
+            filings_df = self.load_filings(ticker)
+            
+            # Load Company Concepts
+            concepts_df = self.load_company_concepts(ticker)
+            
+            # Merge both dataframes if they are not empty
+            if not filings_df.empty and not concepts_df.empty:
+                merged_df = pd.merge(filings_df, concepts_df, on='ticker', how='left')
+                all_data.append(merged_df)
+                self.logger.info(f"Loaded {len(filings_df)} filings and concepts for {ticker}")
+            elif not filings_df.empty:
+                all_data.append(filings_df)
+                self.logger.info(f"Loaded {len(filings_df)} filings for {ticker}")
+            elif not concepts_df.empty:
+                all_data.append(concepts_df)
+                self.logger.info(f"Loaded company concepts for {ticker}")
+        
+        # Concatenate all dataframes into a single DataFrame
+        all_data_df = pd.concat(all_data, ignore_index=True)
+        
+        # Return the merged data for all tickers as a single DataFrame
+        return all_data_df
 
-# Print the heads of all loaded CSV DataFrames
-print_dataframe_heads(all_ticker_data)
+def load_sec_data():
+    # Create an instance of the SECFilingLoader
+    loader = SECFilingLoader(base_dir=CONFIG['BASE_DIR'])
+
+    # Load all filings and company concepts for specified tickers
+    all_data_df = loader.load_all_filings(tickers=CONFIG['TICKERS'])
+
+    # Extract required columns
+    required_cols = ["ticker", "filing_date", "content"]  # Adjust columns as needed
+    all_data_df_min = all_data_df[required_cols]
+
+    # Load SEC facts (assuming the CSV path is correct)
+    sec_facts_file_path = os.path.join(CONFIG['BASE_DIR'], 'sec_data_all_tickers.csv')
+    df_sec_facts = pd.read_csv(sec_facts_file_path)
+
+    # Convert 'Filed Date' and 'filing_date' columns to datetime, if not already
+    df_sec_facts['Filed Date'] = pd.to_datetime(df_sec_facts['Filed Date'], errors='coerce')
+    all_data_df_min['filing_date'] = pd.to_datetime(all_data_df_min['filing_date'], errors='coerce')
+
+    # Sort both DataFrames by their respective date columns, latest at the top
+    df_sec_facts = df_sec_facts.sort_values(by="Filed Date", ascending=False)
+    all_data_df_min = all_data_df_min.sort_values(by="filing_date", ascending=False)
+
+    # Return both DataFrames
+    return df_sec_facts, all_data_df_min
