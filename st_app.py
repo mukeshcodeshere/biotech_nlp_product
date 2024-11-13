@@ -6,7 +6,9 @@ from config import CONFIG
 import subprocess
 import time
 from sec_loader import load_sec_data
-
+# NEED TO REMOVE ALL FILES IN FOLDER BEFORE DOWNLOADING
+cwd = os.getcwd()
+st.write(cwd)
 # Streamlit UI layout
 st.title('SEC Data Downloader')
 st.write("""
