@@ -1,0 +1,5 @@
+yfinance
+Flask
+python-dotenv
+matplotlib
+requests

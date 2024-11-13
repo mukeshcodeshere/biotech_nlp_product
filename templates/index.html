@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Chart</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        input, button { padding: 10px; margin: 10px 0; }
+        canvas { width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Price Chart</h1>
+        <form id="ticker-form">
+            <label for="tickers">Enter Stock Tickers (comma separated):</label>
+            <input type="text" id="tickers" name="tickers" required>
+            <button type="submit">Get Chart</button>
+        </form>
+        <div id="chart-container" style="display: none;">
+            <h2>Stock Price Chart</h2>
+            <img id="stock-chart" src="" alt="Stock Chart">
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#ticker-form').submit(function(event) {
+                event.preventDefault();
+                const tickers = $('#tickers').val();
+                $.post('/get_chart', { tickers: tickers }, function(data) {
+                    $('#stock-chart').attr('src', 'data:image/png;base64,' + data.chart);
+                    $('#chart-container').show();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
