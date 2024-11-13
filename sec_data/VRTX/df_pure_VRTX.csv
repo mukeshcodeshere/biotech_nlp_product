@@ -3,8 +3,12 @@ us-gaap,DefinedContributionPlanMaximumAnnualContributionsPerEmployeePercent,pure
 us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.142,2021-01-01,2021-12-31,0000875320-24-000062,2023,FY,10-K,2024-02-15,CY2021,VRTX
 us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.215,2022-01-01,2022-12-31,0000875320-24-000062,2023,FY,10-K,2024-02-15,CY2022,VRTX
 us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.215,2023-01-01,2023-03-31,0000875320-24-000139,2024,Q1,10-Q,2024-05-07,CY2023Q1,VRTX
+us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.213,2023-01-01,2023-06-30,0000875320-24-000198,2024,Q2,10-Q,2024-08-02,,VRTX
+us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.212,2023-04-01,2023-06-30,0000875320-24-000198,2024,Q2,10-Q,2024-08-02,CY2023Q2,VRTX
 us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.174,2023-01-01,2023-12-31,0000875320-24-000062,2023,FY,10-K,2024-02-15,CY2023,VRTX
 us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.14,2024-01-01,2024-03-31,0000875320-24-000139,2024,Q1,10-Q,2024-05-07,CY2024Q1,VRTX
+us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,-0.181,2024-01-01,2024-06-30,0000875320-24-000198,2024,Q2,10-Q,2024-08-02,,VRTX
+us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,-0.06,2024-04-01,2024-06-30,0000875320-24-000198,2024,Q2,10-Q,2024-08-02,CY2024Q2,VRTX
 us-gaap,EffectiveIncomeTaxRateReconciliationAtFederalStatutoryIncomeTaxRate,pure,0.21,2021-01-01,2021-12-31,0000875320-24-000062,2023,FY,10-K,2024-02-15,CY2021,VRTX
 us-gaap,EffectiveIncomeTaxRateReconciliationAtFederalStatutoryIncomeTaxRate,pure,0.21,2022-01-01,2022-12-31,0000875320-24-000062,2023,FY,10-K,2024-02-15,CY2022,VRTX
 us-gaap,EffectiveIncomeTaxRateReconciliationAtFederalStatutoryIncomeTaxRate,pure,0.21,2023-01-01,2023-12-31,0000875320-24-000062,2023,FY,10-K,2024-02-15,CY2023,VRTX

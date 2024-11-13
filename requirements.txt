@@ -4,3 +4,4 @@ datamule==0.378
 streamlit==1.39.0
 selectolax==0.3.26
 psutil==5.9.0
+openai==1.54.3

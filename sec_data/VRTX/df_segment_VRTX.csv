@@ -1,3 +1,4 @@
 Taxonomy,Concept,Unit,Value,Start,End,Accession,Fiscal Year,Fiscal Period,Form,Filed Date,Frame,Ticker
 us-gaap,NumberOfOperatingSegments,segment,1.0,2023-01-01,2023-12-31,0000875320-24-000062,2023,FY,10-K,2024-02-15,CY2023,VRTX
 us-gaap,NumberOfOperatingSegments,segment,1.0,2024-01-01,2024-03-31,0000875320-24-000139,2024,Q1,10-Q,2024-05-07,CY2024Q1,VRTX
+us-gaap,NumberOfOperatingSegments,segment,1.0,2024-01-01,2024-06-30,0000875320-24-000198,2024,Q2,10-Q,2024-08-02,,VRTX
