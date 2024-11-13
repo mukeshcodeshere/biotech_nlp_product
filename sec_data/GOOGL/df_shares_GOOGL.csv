@@ -1,0 +1,25 @@
+Taxonomy,Concept,Unit,Value,Start,End,Accession,Fiscal Year,Fiscal Period,Form,Filed Date,Frame
+us-gaap,CommonStockSharesAuthorized,shares,300000000000.0,,2022-12-31,0001652044-24-000022,2023,FY,10-K,2024-01-31,CY2022Q4I
+us-gaap,CommonStockSharesAuthorized,shares,300000000000.0,,2023-12-31,0001652044-24-000022,2023,FY,10-K,2024-01-31,
+us-gaap,CommonStockSharesAuthorized,shares,300000000000.0,,2023-12-31,0001652044-24-000053,2024,Q1,10-Q,2024-04-26,
+us-gaap,CommonStockSharesAuthorized,shares,300000000000.0,,2024-03-31,0001652044-24-000053,2024,Q1,10-Q,2024-04-26,CY2024Q1I
+us-gaap,CommonStockSharesIssued,shares,12849000000.0,,2022-12-31,0001652044-24-000022,2023,FY,10-K,2024-01-31,CY2022Q4I
+us-gaap,CommonStockSharesIssued,shares,12460000000.0,,2023-12-31,0001652044-24-000022,2023,FY,10-K,2024-01-31,
+us-gaap,CommonStockSharesIssued,shares,12460000000.0,,2023-12-31,0001652044-24-000053,2024,Q1,10-Q,2024-04-26,
+us-gaap,CommonStockSharesIssued,shares,12381000000.0,,2024-03-31,0001652044-24-000053,2024,Q1,10-Q,2024-04-26,CY2024Q1I
+us-gaap,CommonStockSharesOutstanding,shares,12849000000.0,,2022-12-31,0001652044-24-000022,2023,FY,10-K,2024-01-31,CY2022Q4I
+us-gaap,CommonStockSharesOutstanding,shares,12460000000.0,,2023-12-31,0001652044-24-000022,2023,FY,10-K,2024-01-31,
+us-gaap,CommonStockSharesOutstanding,shares,12460000000.0,,2023-12-31,0001652044-24-000053,2024,Q1,10-Q,2024-04-26,
+us-gaap,CommonStockSharesOutstanding,shares,12381000000.0,,2024-03-31,0001652044-24-000053,2024,Q1,10-Q,2024-04-26,CY2024Q1I
+us-gaap,PreferredStockSharesAuthorized,shares,100000000.0,,2022-12-31,0001652044-24-000022,2023,FY,10-K,2024-01-31,CY2022Q4I
+us-gaap,PreferredStockSharesAuthorized,shares,100000000.0,,2023-12-31,0001652044-24-000022,2023,FY,10-K,2024-01-31,
+us-gaap,PreferredStockSharesAuthorized,shares,100000000.0,,2023-12-31,0001652044-24-000053,2024,Q1,10-Q,2024-04-26,
+us-gaap,PreferredStockSharesAuthorized,shares,100000000.0,,2024-03-31,0001652044-24-000053,2024,Q1,10-Q,2024-04-26,CY2024Q1I
+us-gaap,PreferredStockSharesIssued,shares,0.0,,2022-12-31,0001652044-24-000022,2023,FY,10-K,2024-01-31,CY2022Q4I
+us-gaap,PreferredStockSharesIssued,shares,0.0,,2023-12-31,0001652044-24-000022,2023,FY,10-K,2024-01-31,
+us-gaap,PreferredStockSharesIssued,shares,0.0,,2023-12-31,0001652044-24-000053,2024,Q1,10-Q,2024-04-26,
+us-gaap,PreferredStockSharesIssued,shares,0.0,,2024-03-31,0001652044-24-000053,2024,Q1,10-Q,2024-04-26,CY2024Q1I
+us-gaap,PreferredStockSharesOutstanding,shares,0.0,,2022-12-31,0001652044-24-000022,2023,FY,10-K,2024-01-31,CY2022Q4I
+us-gaap,PreferredStockSharesOutstanding,shares,0.0,,2023-12-31,0001652044-24-000022,2023,FY,10-K,2024-01-31,
+us-gaap,PreferredStockSharesOutstanding,shares,0.0,,2023-12-31,0001652044-24-000053,2024,Q1,10-Q,2024-04-26,
+us-gaap,PreferredStockSharesOutstanding,shares,0.0,,2024-03-31,0001652044-24-000053,2024,Q1,10-Q,2024-04-26,CY2024Q1I

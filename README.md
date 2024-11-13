@@ -1,1 +1,2 @@
-"# biotech_nlp_product" 
+# Input is a list of tickers
+# Output is the text

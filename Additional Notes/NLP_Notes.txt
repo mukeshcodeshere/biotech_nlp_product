@@ -1,0 +1,5 @@
+https://x.com/plainyogurt21/status/1854952441529123301
+
+use an LLM to scrape SEC filings when posted by companies on our watchlist
+
+Infra needed + Estimated cost? API key + Hosting (Api key is cheap) / hosting might be a bit more ex (~100 depending on usage) / how often is tool going to be used?

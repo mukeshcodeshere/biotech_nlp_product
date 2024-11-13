@@ -1,0 +1,17 @@
+Taxonomy,Concept,Unit,Value,Start,End,Accession,Fiscal Year,Fiscal Period,Form,Filed Date,Frame
+us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.19,2022-07-01,2022-12-31,0000950170-24-008814,2024,Q2,10-Q,2024-01-30,
+us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.19,2022-10-01,2022-12-31,0000950170-24-008814,2024,Q2,10-Q,2024-01-30,CY2022Q4
+us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.19,2022-07-01,2023-03-31,0000950170-24-048288,2024,Q3,10-Q,2024-04-25,
+us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.19,2023-01-01,2023-03-31,0000950170-24-048288,2024,Q3,10-Q,2024-04-25,CY2023Q1
+us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.18,2023-07-01,2023-12-31,0000950170-24-008814,2024,Q2,10-Q,2024-01-30,
+us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.18,2023-10-01,2023-12-31,0000950170-24-008814,2024,Q2,10-Q,2024-01-30,CY2023Q4
+us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.18,2023-07-01,2024-03-31,0000950170-24-048288,2024,Q3,10-Q,2024-04-25,
+us-gaap,EffectiveIncomeTaxRateContinuingOperations,pure,0.18,2024-01-01,2024-03-31,0000950170-24-048288,2024,Q3,10-Q,2024-04-25,CY2024Q1
+us-gaap,FinanceLeaseWeightedAverageDiscountRatePercent,pure,0.034,,2023-06-30,0000950170-24-008814,2024,Q2,10-Q,2024-01-30,
+us-gaap,FinanceLeaseWeightedAverageDiscountRatePercent,pure,0.034,,2023-06-30,0000950170-24-048288,2024,Q3,10-Q,2024-04-25,
+us-gaap,FinanceLeaseWeightedAverageDiscountRatePercent,pure,0.037,,2023-12-31,0000950170-24-008814,2024,Q2,10-Q,2024-01-30,CY2023Q4I
+us-gaap,FinanceLeaseWeightedAverageDiscountRatePercent,pure,0.038,,2024-03-31,0000950170-24-048288,2024,Q3,10-Q,2024-04-25,CY2024Q1I
+us-gaap,OperatingLeaseWeightedAverageDiscountRatePercent,pure,0.029,,2023-06-30,0000950170-24-008814,2024,Q2,10-Q,2024-01-30,
+us-gaap,OperatingLeaseWeightedAverageDiscountRatePercent,pure,0.029,,2023-06-30,0000950170-24-048288,2024,Q3,10-Q,2024-04-25,
+us-gaap,OperatingLeaseWeightedAverageDiscountRatePercent,pure,0.033,,2023-12-31,0000950170-24-008814,2024,Q2,10-Q,2024-01-30,CY2023Q4I
+us-gaap,OperatingLeaseWeightedAverageDiscountRatePercent,pure,0.033,,2024-03-31,0000950170-24-048288,2024,Q3,10-Q,2024-04-25,CY2024Q1I

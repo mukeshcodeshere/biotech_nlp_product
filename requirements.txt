@@ -1,5 +1,20 @@
-yfinance
-Flask
-python-dotenv
-matplotlib
-requests
+import os
+import asyncio
+import logging
+import warnings
+import json
+from datetime import datetime
+from glob import glob
+from typing import List, Dict, Optional
+
+import pandas as pd
+from selectolax.parser import HTMLParser
+
+# Suppress warnings
+warnings.filterwarnings("ignore")
+
+# Get today's date
+today = datetime.today()
+
+# Format the date in 'YYYY-MM-DD' format
+today_date = today.strftime('%Y-%m-%d')
