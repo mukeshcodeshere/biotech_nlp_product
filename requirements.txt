@@ -2,3 +2,4 @@ pandas==2.2.2
 aiohttp==3.10.10
 datamule==0.378
 streamlit==1.39.0
+selectolax==0.3.26
