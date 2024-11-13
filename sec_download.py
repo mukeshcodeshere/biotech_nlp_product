@@ -55,30 +55,45 @@ async def process_sec_data(tickers, start, end, base_dir):
 
     for ticker in tickers:
         try:
+            # Pull SEC data for the single ticker
             df, unit_dfs = await pull_sec_data_single_ticker(ticker, downloader)
+            # Filter by the start and end dates
             df_filtered = df[(df['Filed Date'] >= start) & (df['Filed Date'] <= end)]
 
+            # Add a column for the ticker
+            df_filtered['Ticker'] = ticker
+
+            # Create directory for the ticker's data
             ticker_dir = os.path.join(base_dir, ticker)
             if not os.path.exists(ticker_dir):
                 os.makedirs(ticker_dir)
 
+            # Save the filtered data for the ticker
             df_filtered.to_csv(f'{ticker_dir}/sec_data_{ticker}.csv', index=False)
             print(f"Data for ticker {ticker} saved successfully.")
 
+            # Process each unit dataframe, filter and save
             for unit_name, unit_df in unit_dfs.items():
                 unit_df_filtered = unit_df[(unit_df['Filed Date'] >= start) & (unit_df['Filed Date'] <= end)]
+                # Add the ticker to the unit dataframe as well
+                unit_df_filtered['Ticker'] = ticker
                 unit_df_filtered.to_csv(f'{ticker_dir}/{unit_name}_{ticker}.csv', index=False)
                 print(f"Unit data for {unit_name} of ticker {ticker} saved successfully.")
 
+            # Append the filtered data to the all_data list
             all_data.append(df_filtered)
 
+            # Fetch CIK and download filings (not sure what this is for, but leaving as is)
             cik = await fetch_cik_from_ticker(ticker, downloader.headers)
             await download_filings(ticker, cik, base_dir)
 
         except Exception as e:
             print(f"Failed to process data for ticker {ticker}: {str(e)}")
 
+    # Combine all data into a single DataFrame
     all_data_df = pd.concat(all_data, ignore_index=True)
+    
+    # Save the combined data with tickers to a CSV file
     all_data_df.to_csv(f'{base_dir}/sec_data_all_tickers.csv', index=False)
     print(f"Combined data for all tickers saved to sec_data_all_tickers.csv.")
 
