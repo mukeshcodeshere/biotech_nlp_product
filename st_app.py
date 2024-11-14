@@ -106,5 +106,6 @@ if st.session_state.step == 3:
 if st.session_state.step == 4:
     st.write("Loading and displaying latest 10-Q data...")
     df_clean = get_latest_10q_info()
+    st.write(df_clean.head())
     st.write("Comparison for one ticker - example")
     st.write(df_clean.comparison[0])

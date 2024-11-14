@@ -1,0 +1,7 @@
+Taxonomy,Concept,Unit,Value,Start,End,Accession,Fiscal Year,Fiscal Period,Form,Filed Date,Frame,Ticker
+us-gaap,NumberOfOperatingSegments,Segment,1.0,2023-01-01,2023-12-31,0000950170-24-027910,2023,FY,10-K,2024-03-07,,PHAT
+us-gaap,NumberOfOperatingSegments,Segment,1.0,2023-01-01,2023-12-31,0000950170-24-073629,2023,FY,10-K/A,2024-06-14,CY2023,PHAT
+us-gaap,NumberOfOperatingSegments,Segment,1.0,2024-01-01,2024-03-31,0000950170-24-056888,2024,Q1,10-Q,2024-05-09,,PHAT
+us-gaap,NumberOfOperatingSegments,Segment,1.0,2024-01-01,2024-03-31,0000950170-24-073628,2024,Q1,10-Q/A,2024-06-14,CY2024Q1,PHAT
+us-gaap,NumberOfOperatingSegments,Segment,1.0,2024-01-01,2024-06-30,0000950170-24-093885,2024,Q2,10-Q,2024-08-08,,PHAT
+us-gaap,NumberOfOperatingSegments,Segment,1.0,2024-01-01,2024-09-30,0000950170-24-123264,2024,Q3,10-Q,2024-11-07,,PHAT
