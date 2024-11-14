@@ -54,8 +54,8 @@ if st.session_state.step == 1:
             f.write(f"    'START_DATE': '{start_date}',\n")
             f.write(f"    'END_DATE': '{end_date}',\n")
             f.write(f"    'BASE_DIR': '{base_dir}',\n")
-            f.write(f"    'USER_AGENT': 'Your Name your@email.com'\n")
-            f.write(f"    'DATABASE_URL': {db_string}\n")
+            f.write(f"    'USER_AGENT': 'Your Name your@email.com',\n")
+            f.write(f"    'DATABASE_URL': '{db_string}'\n")
             f.write(f"}}\n")
         st.success("Configuration updated successfully!")
         # Move to the next step
@@ -95,7 +95,7 @@ if st.session_state.step == 2:
 # Step 3: Load and Display Data (Only available in step 3)
 if st.session_state.step == 3:
     st.write("Loading SEC data...")
-    df_sec_facts, all_data_df_min = read_from_database()#load_sec_data()
+    df_sec_facts, all_data_df_min = load_sec_data() #read_from_database()#load_sec_data()
     st.write("Stock Data")
     st.write(df_sec_facts.head())
     st.write("Filings Data")
